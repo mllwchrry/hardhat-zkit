@@ -228,10 +228,13 @@ export class CircomCompilerDownloader {
       this._platform !== CompilerPlatformBinary.WASM
     ) {
       await fs.promises.chmod(downloadPath, 0o755);
+
+      // @dev On Linux systems, a brief pause is needed to ensure that chmod permissions
+      // are fully applied by the file system before executing the file, preventing potential race conditions.
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     if (this._platform !== CompilerPlatformBinary.WASM && !(await this._checkCompilerWork(downloadPath))) {
-      console.log("compiler is not working");
       await fsExtra.unlink(downloadPath);
 
       throw new HardhatZKitError("Downloaded compiler is not working");
