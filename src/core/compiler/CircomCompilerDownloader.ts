@@ -233,7 +233,8 @@ export class CircomCompilerDownloader {
       this._platform !== CompilerPlatformBinary.WASM
     ) {
       fs.chmodSync(downloadPath, 0o755);
-      console.log("test");
+
+      await new Promise((resolve) => setTimeout(resolve, 10));
     }
 
     if (this._platform !== CompilerPlatformBinary.WASM && !(await this._checkCompilerWork(downloadPath))) {
@@ -248,9 +249,7 @@ export class CircomCompilerDownloader {
     const execFileP = promisify(execFile);
 
     try {
-      console.log("inside try _checkCompilerWork");
       await execFileP(compilerBinary, ["--version"]);
-      console.log("inside try _checkCompilerWork after");
 
       return true;
     } catch (error: any) {
