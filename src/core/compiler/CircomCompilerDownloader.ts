@@ -1,6 +1,7 @@
 import os from "os";
 import path from "path";
-import fs from "fs-extra";
+import fsExtra from "fs-extra";
+import fs from "fs";
 import https from "https";
 import { promisify } from "util";
 import { execFile } from "child_process";
@@ -64,7 +65,7 @@ export class CircomCompilerDownloader {
       const downloadPath = this._getCompilerDownloadPath(version);
       const downloadPathWasm = this._getWasmCompilerDownloadPath(version);
 
-      return (await fs.pathExists(downloadPath)) || fs.pathExists(downloadPathWasm);
+      return (await fsExtra.pathExists(downloadPath)) || fsExtra.pathExists(downloadPathWasm);
     }
 
     const latestDownloadedVersion = await this._getLatestDownloadedCircomVersion();
@@ -91,13 +92,13 @@ export class CircomCompilerDownloader {
 
     console.log("compilersDir", this._compilersDir);
     // console.log("readdir", fs.readdirSync(this._compilersDir));
-    console.log("await fs.pathExists(wasmCompilerBinaryPath)", await fs.pathExists(wasmCompilerBinaryPath));
+    console.log("await fs.pathExists(wasmCompilerBinaryPath)", await fsExtra.pathExists(wasmCompilerBinaryPath));
 
-    if (await fs.pathExists(wasmCompilerBinaryPath)) {
+    if (await fsExtra.pathExists(wasmCompilerBinaryPath)) {
       return { binaryPath: wasmCompilerBinaryPath, version: version, isWasm: true };
     }
 
-    if (await fs.pathExists(compilerBinaryPath)) {
+    if (await fsExtra.pathExists(compilerBinaryPath)) {
       return { binaryPath: compilerBinaryPath, version: version, isWasm: false };
     }
 
@@ -237,7 +238,7 @@ export class CircomCompilerDownloader {
 
     if (this._platform !== CompilerPlatformBinary.WASM && !(await this._checkCompilerWork(downloadPath))) {
       console.log("compiler is not working");
-      await fs.unlink(downloadPath);
+      await fsExtra.unlink(downloadPath);
 
       throw new HardhatZKitError("Downloaded compiler is not working");
     }
