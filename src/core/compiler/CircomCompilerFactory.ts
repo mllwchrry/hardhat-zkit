@@ -50,6 +50,7 @@ export class BaseCircomCompilerFactory {
     if (compilerPlatformBinary !== CompilerPlatformBinary.WASM) {
       compiler = await this._tryCreateBinaryCompiler(compilerPlatformBinary, version, isVersionStrict);
 
+      console.log("after _tryCreateBinaryCompiler", compiler);
       if (compiler) {
         return compiler;
       }
@@ -149,6 +150,7 @@ export class BaseCircomCompilerFactory {
 
     Reporter!.reportCompilerVersion(compilerBinaryInfo.version);
 
+    console.log("compilerBinaryInfo", compilerBinaryInfo);
     return compilerBinaryInfo;
   }
 
