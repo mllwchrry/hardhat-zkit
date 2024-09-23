@@ -64,6 +64,17 @@ export async function downloadFile(
           fileStream
             .on("finish", () => {
               onFinishReporter();
+
+              fileStream.close((err) => {
+                if (err) {
+                  onErrorReporter();
+                  fs.unlink(file, () => resolve(false));
+                } else {
+                  onFinishReporter();
+                  resolve(true);
+                }
+              });
+
               resolve(true);
             })
             .on("error", () => {
