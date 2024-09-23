@@ -232,6 +232,7 @@ export class CircomCompilerDownloader {
       this._platform !== CompilerPlatformBinary.WASM
     ) {
       fs.chmodSync(downloadPath, 0o755);
+      Reporter!.verboseLog("compiler-downloader", "test");
     }
 
     if (this._platform !== CompilerPlatformBinary.WASM && !(await this._checkCompilerWork(downloadPath))) {

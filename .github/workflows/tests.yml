@@ -11,7 +11,7 @@ on:
 jobs:
   test:
     name: 'Node.js v${{ matrix.node }}'
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node:
