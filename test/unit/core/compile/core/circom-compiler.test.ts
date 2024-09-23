@@ -2,12 +2,12 @@ import fsExtra from "fs-extra";
 
 import { expect } from "chai";
 
-import { getProjectRootPath, useEnvironment } from "../../../helpers";
-import { getNormalizedFullPath } from "../../../../src/utils/path-utils";
-import { WASMCircomCompiler } from "../../../../src/core";
-import { NODE_MODULES } from "../../../../src/constants";
+import { getProjectRootPath, useEnvironment } from "../../../../helpers";
+import { getNormalizedFullPath } from "../../../../../src/utils/path-utils";
+import { WASMCircomCompiler } from "../../../../../src/core";
+import { NODE_MODULES } from "../../../../../src/constants";
 
-import { CompileFlags } from "../../../../src/types/core";
+import { CompileFlags } from "../../../../../src/types/core";
 
 describe("WASMCircomCompiler", () => {
   const defaultCompileFlags: CompileFlags = {
@@ -123,7 +123,7 @@ describe("WASMCircomCompiler", () => {
       );
     });
 
-    it("should correctly compile circuit with library inclue", async function () {
+    it("should correctly compile circuit with library include", async function () {
       const circuitFullPath: string = getNormalizedFullPath(this.hre.config.paths.root, "circuits/hash2.circom");
       const artifactsFullPath: string = getNormalizedFullPath(
         this.hre.config.paths.root,

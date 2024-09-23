@@ -1,6 +1,7 @@
 import os from "os";
 import path from "path";
-import fs from "fs-extra";
+import fsExtra from "fs-extra";
+import fs from "fs";
 import https from "https";
 import { promisify } from "util";
 import { execFile } from "child_process";
@@ -64,7 +65,7 @@ export class CircomCompilerDownloader {
       const downloadPath = this._getCompilerDownloadPath(version);
       const downloadPathWasm = this._getWasmCompilerDownloadPath(version);
 
-      return (await fs.pathExists(downloadPath)) || fs.pathExists(downloadPathWasm);
+      return (await fsExtra.pathExists(downloadPath)) || fsExtra.pathExists(downloadPathWasm);
     }
 
     const latestDownloadedVersion = await this._getLatestDownloadedCircomVersion();
@@ -74,7 +75,9 @@ export class CircomCompilerDownloader {
 
   public async getCompilerBinary(version: string, isVersionStrict: boolean): Promise<CompilerInfo> {
     if (!isVersionStrict) {
+      console.log("version1", version);
       version = await this._getLatestDownloadedCircomVersion();
+      console.log("version2", version);
 
       if (!version || version === "0.0.0") {
         throw new HardhatZKitError("No latest compiler found");
@@ -84,12 +87,19 @@ export class CircomCompilerDownloader {
     const compilerBinaryPath = this._getCompilerDownloadPath(version);
     const wasmCompilerBinaryPath = this._getWasmCompilerDownloadPath(version);
 
-    if (await fs.pathExists(compilerBinaryPath)) {
-      return { binaryPath: compilerBinaryPath, version: version, isWasm: false };
+    console.log("compilerBinaryPath", compilerBinaryPath);
+    console.log("wasmCompilerBinaryPath", wasmCompilerBinaryPath);
+
+    console.log("compilersDir", this._compilersDir);
+    // console.log("readdir", fs.readdirSync(this._compilersDir));
+    console.log("await fs.pathExists(wasmCompilerBinaryPath)", await fsExtra.pathExists(wasmCompilerBinaryPath));
+
+    if (await fsExtra.pathExists(wasmCompilerBinaryPath)) {
+      return { binaryPath: wasmCompilerBinaryPath, version: version, isWasm: true };
     }
 
-    if (await fs.pathExists(wasmCompilerBinaryPath)) {
-      return { binaryPath: wasmCompilerBinaryPath, version: version, isWasm: true };
+    if (await fsExtra.pathExists(compilerBinaryPath)) {
+      return { binaryPath: compilerBinaryPath, version: version, isWasm: false };
     }
 
     throw new HardhatZKitError(`Trying to get a Circom compiler v${version} before it was downloaded`);
@@ -110,7 +120,8 @@ export class CircomCompilerDownloader {
       try {
         downloadPath = await this._downloadCompiler(versionToDownload);
       } catch (error: any) {
-        throw new HardhatZKitError(error);
+        console.log("error", error);
+        throw new HardhatZKitError(error.message);
       }
 
       await this._postProcessCompilerDownload(downloadPath);
@@ -210,16 +221,21 @@ export class CircomCompilerDownloader {
   }
 
   private async _postProcessCompilerDownload(downloadPath: string): Promise<void> {
+    console.log("_postProcessCompilerDownload", downloadPath);
     if (
       this._platform !== CompilerPlatformBinary.WINDOWS_AMD &&
       this._platform !== CompilerPlatformBinary.WINDOWS_ARM &&
       this._platform !== CompilerPlatformBinary.WASM
     ) {
-      await fs.chmod(downloadPath, 0o755);
+      await fs.promises.chmod(downloadPath, 0o755);
+
+      // @dev On Linux systems, a brief pause is needed to ensure that chmod permissions
+      // are fully applied by the file system before executing the file, preventing potential race conditions.
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     if (this._platform !== CompilerPlatformBinary.WASM && !(await this._checkCompilerWork(downloadPath))) {
-      await fs.unlink(downloadPath);
+      await fsExtra.unlink(downloadPath);
 
       throw new HardhatZKitError("Downloaded compiler is not working");
     }
@@ -230,8 +246,10 @@ export class CircomCompilerDownloader {
 
     try {
       await execFileP(compilerBinary, ["--version"]);
+
       return true;
-    } catch {
+    } catch (error: any) {
+      console.log("error inside _checkCompilerWork", error);
       return false;
     }
   }

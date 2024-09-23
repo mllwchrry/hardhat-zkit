@@ -42,9 +42,15 @@ export class BaseCircomCompilerFactory {
       compilerPlatformBinary = CircomCompilerDownloader.getCompilerPlatformBinary("x64");
     }
 
+    console.log("os", os.platform());
+    console.log("arch", os.arch());
+
+    console.log("compilerPlatformBinary", compilerPlatformBinary);
+
     if (compilerPlatformBinary !== CompilerPlatformBinary.WASM) {
       compiler = await this._tryCreateBinaryCompiler(compilerPlatformBinary, version, isVersionStrict);
 
+      console.log("after _tryCreateBinaryCompiler", compiler);
       if (compiler) {
         return compiler;
       }
@@ -132,16 +138,21 @@ export class BaseCircomCompilerFactory {
     isVersionStrict: boolean,
   ): Promise<CompilerInfo> {
     const compilersDir = await this._getCompilersDir();
+    console.log("platform for the downloader", platform);
     const downloader = CircomCompilerDownloader.getCircomCompilerDownloader(platform, compilersDir);
 
+    console.log("is compiler downloaded", await downloader.isCompilerDownloaded(version, isVersionStrict));
     if (!(await downloader.isCompilerDownloaded(version, isVersionStrict))) {
       await downloader.downloadCompiler(version, isVersionStrict);
     }
 
+    console.log("before getCompilerBinary");
     const compilerBinaryInfo = await downloader.getCompilerBinary(version, isVersionStrict);
+    console.log("after getCompilerBinary");
 
     Reporter!.reportCompilerVersion(compilerBinaryInfo.version);
 
+    console.log("compilerBinaryInfo", compilerBinaryInfo);
     return compilerBinaryInfo;
   }
 
