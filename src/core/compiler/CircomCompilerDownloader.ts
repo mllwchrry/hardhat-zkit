@@ -84,6 +84,12 @@ export class CircomCompilerDownloader {
     const compilerBinaryPath = this._getCompilerDownloadPath(version);
     const wasmCompilerBinaryPath = this._getWasmCompilerDownloadPath(version);
 
+    console.log("compilerBinaryPath", compilerBinaryPath);
+    console.log("wasmCompilerBinaryPath", wasmCompilerBinaryPath);
+
+    console.log("compilersDir", this._compilersDir);
+    console.log("readdir", fs.readdirSync(this._compilersDir));
+
     if (await fs.pathExists(wasmCompilerBinaryPath)) {
       return { binaryPath: wasmCompilerBinaryPath, version: version, isWasm: true };
     }
