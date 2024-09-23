@@ -225,15 +225,18 @@ export class CircomCompilerDownloader {
   }
 
   private async _postProcessCompilerDownload(downloadPath: string): Promise<void> {
+    console.log("_postProcessCompilerDownload", downloadPath);
     if (
       this._platform !== CompilerPlatformBinary.WINDOWS_AMD &&
       this._platform !== CompilerPlatformBinary.WINDOWS_ARM &&
       this._platform !== CompilerPlatformBinary.WASM
     ) {
+      console.log("chmod");
       await fs.chmod(downloadPath, 0o755);
     }
 
     if (this._platform !== CompilerPlatformBinary.WASM && !(await this._checkCompilerWork(downloadPath))) {
+      console.log("compiler is not working");
       await fs.unlink(downloadPath);
 
       throw new HardhatZKitError("Downloaded compiler is not working");
@@ -244,9 +247,13 @@ export class CircomCompilerDownloader {
     const execFileP = promisify(execFile);
 
     try {
+      console.log("inside try _checkCompilerWork");
       await execFileP(compilerBinary, ["--version"]);
+      console.log("inside try _checkCompilerWork after");
+
       return true;
-    } catch {
+    } catch (error: any) {
+      console.log("error inside _checkCompilerWork", error);
       return false;
     }
   }
