@@ -74,7 +74,9 @@ export class CircomCompilerDownloader {
 
   public async getCompilerBinary(version: string, isVersionStrict: boolean): Promise<CompilerInfo> {
     if (!isVersionStrict) {
+      console.log("version1", version);
       version = await this._getLatestDownloadedCircomVersion();
+      console.log("version2", version);
 
       if (!version || version === "0.0.0") {
         throw new HardhatZKitError("No latest compiler found");

@@ -146,7 +146,9 @@ export class BaseCircomCompilerFactory {
       await downloader.downloadCompiler(version, isVersionStrict);
     }
 
+    console.log("before getCompilerBinary");
     const compilerBinaryInfo = await downloader.getCompilerBinary(version, isVersionStrict);
+    console.log("after getCompilerBinary");
 
     Reporter!.reportCompilerVersion(compilerBinaryInfo.version);
 
