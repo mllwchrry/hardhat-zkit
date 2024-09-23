@@ -177,9 +177,7 @@ export class CircomCompilerDownloader {
   }
 
   private async _downloadCompiler(version: string): Promise<string> {
-    console.log("inside _downloadCompiler");
     const downloadPath = this._getCompilerDownloadPath(version);
-    console.log("downloadPath", downloadPath);
 
     let url: string;
 
@@ -198,8 +196,6 @@ export class CircomCompilerDownloader {
         url = `${COMPILER_WASM_REPOSITORY_URL}/v${WASM_COMPILER_VERSIONING[version]}/circom.wasm`;
     }
 
-    console.log("url", url);
-
     if (
       !(await downloadFile(
         downloadPath,
@@ -208,7 +204,6 @@ export class CircomCompilerDownloader {
         () => Reporter!.reportCircomCompilerDownloadingError(),
       ))
     ) {
-      console.log("failed to download");
       throw new HardhatZKitError(
         `Failed to download Circom compiler v${version}. Please try again or download manually.`,
       );
