@@ -233,6 +233,7 @@ export class CircomCompilerDownloader {
     ) {
       console.log("chmod");
       await fs.chmod(downloadPath, 0o755);
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     if (this._platform !== CompilerPlatformBinary.WASM && !(await this._checkCompilerWork(downloadPath))) {
