@@ -3,10 +3,12 @@ on:
   push:
     branches:
       - master
+      - feature/docker
   pull_request:
     branches:
       - master
       - dev
+      - feature/docker
 
 jobs:
   test:
