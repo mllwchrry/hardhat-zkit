@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    name: 'Dockerized Tests'
+    name: 'Docker Tests'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
