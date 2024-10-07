@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - master
+      - fix/test-coverage
   pull_request:
     branches:
       - master
       - dev
+      - fix/test-coverage
 
 jobs:
   test:
