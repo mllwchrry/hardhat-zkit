@@ -8,6 +8,7 @@ on:
     branches:
       - master
       - dev
+      - feature/docker
 
 jobs:
   test:
@@ -23,6 +24,8 @@ jobs:
       - name: Build Docker Image
         run: docker build -t hardhat-zkit-test-runner .
 
-      - name: Debug Docker Container
-        run: docker run --rm -it -v ${{ github.workspace }}:/hardhat-zkit hardhat-zkit-test-runner /bin/bash
+      - name: Check Mocha Installation
+        run: docker run --rm -v ${{ github.workspace }}:/hardhat-zkit hardhat-zkit-test-runner npm list mocha
 
+      - name: Run Tests Inside Docker Container
+        run: docker run --rm -v ${{ github.workspace }}:/hardhat-zkit hardhat-zkit-test-runner
