@@ -1,0 +1,8 @@
+services:
+  test-runner:
+    build:
+      context: .
+    container_name: test-runner
+    volumes:
+      - .:/hardhat-zkit
+    command: npm run test:local
