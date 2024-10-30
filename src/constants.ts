@@ -7,6 +7,8 @@ export const CIRCUIT_COMPILE_CACHE_VERSION = "hh-zkit-compile-cache-1";
 export const CIRCUIT_SETUP_CACHE_VERSION = "hh-zkit-setup-cache-1";
 export const CIRCUIT_ARTIFACT_VERSION = "hh-zkit-artifacts-1";
 
+export const BN128_CURVE_NAME = "bn128";
+
 export const NODE_MODULES = "node_modules";
 
 export const MAGIC_DESCRIPTOR = 1337;
@@ -28,8 +30,8 @@ export const COMPILER_ARM_REPOSITORY_URL = "https://github.com/distributed-lab/c
 export const COMPILER_WASM_REPOSITORY_URL = "https://github.com/distributed-lab/circom-wasm/releases/download";
 
 export const LATEST_SUPPORTED_CIRCOM_VERSION = "2.1.9";
+export const OLDEST_SUPPORTED_CIRCOM_VERSION = "2.0.5";
 
-export const OLDEST_SUPPORTED_ARM_CIRCOM_VERSION = "2.1.8";
 export const WASM_COMPILER_VERSIONING: { [key: string]: string } = {
   "2.1.8": "0.2.18-rc.3",
   "2.1.9": "0.2.19-rc.0",
