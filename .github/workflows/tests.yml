@@ -26,3 +26,10 @@ jobs:
 
       - name: Run Tests Inside Docker Container
         run: docker run --rm hardhat-zkit-test-runner
+
+      - name: Cleanup Docker resources
+        run: |
+          docker rmi hardhat-zkit-v1 --force
+          docker buildx rm builder || true
+          docker network prune -f
+          docker volume prune -f

@@ -38,7 +38,7 @@
     "build": "tsc --build .",
     "prepare-tests": "npm run compile --workspaces",
     "test": "npm run test:docker",
-    "test:docker": "docker build -t hardhat-zkit-v1 . && docker run --rm hardhat-zkit-v1",
+    "test:docker": "docker build -t hardhat-zkit-v1 . && docker run --rm hardhat-zkit-v1 && docker rmi hardhat-zkit-v1 --force",
     "test:local": "mocha --recursive 'test/**/*.ts' --exit",
     "coverage": "nyc mocha --recursive 'test/**/*.ts' --exit",
     "clean-tests": "npm run clean --workspaces",
