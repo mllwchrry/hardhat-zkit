@@ -9,7 +9,7 @@ import { CircomCompilerFactory, createCircomCompilerFactory, WASMCircomCompiler 
 import { NODE_MODULES } from "@src/constants";
 import { CompileFlags } from "@src/types/core";
 
-describe("WASMCircomCompiler", () => {
+describe.only("WASMCircomCompiler", () => {
   const defaultCompileFlags: CompileFlags = {
     r1cs: true,
     wasm: true,

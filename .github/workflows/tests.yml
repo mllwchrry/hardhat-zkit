@@ -24,8 +24,5 @@ jobs:
       - name: Build Docker Image
         run: docker build -t hardhat-zkit-test-runner .
 
-      - name: Check Mocha Installation
-        run: docker run --rm -v ${{ github.workspace }}:/hardhat-zkit hardhat-zkit-test-runner npm list mocha
-
       - name: Run Tests Inside Docker Container
-        run: docker run --rm -v ${{ github.workspace }}:/hardhat-zkit hardhat-zkit-test-runner
+        run: docker run --rm hardhat-zkit-test-runner
