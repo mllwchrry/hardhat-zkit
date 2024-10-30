@@ -2,13 +2,13 @@ import fsExtra from "fs-extra";
 
 import { expect } from "chai";
 
-import { useEnvironment } from "@test-helpers";
+import { getProjectRootPath, useEnvironment } from "@test-helpers";
 import { getNormalizedFullPath } from "@src/utils/path-utils";
 import { CircomCompilerFactory, createCircomCompilerFactory, WASMCircomCompiler } from "@src/core";
 
-import { NODE_MODULES } from "@src/constants";
-import { CompileFlags } from "@src/types/core";
-import { execSync } from "child_process";
+import { LATEST_SUPPORTED_CIRCOM_VERSION, NODE_MODULES } from "@src/constants";
+import { CompileFlags, CompilerPlatformBinary } from "@src/types/core";
+import { CircomCompilerDownloader } from "@src/core/compiler/CircomCompilerDownloader";
 
 describe("WASMCircomCompiler", () => {
   const defaultCompileFlags: CompileFlags = {
@@ -17,6 +17,9 @@ describe("WASMCircomCompiler", () => {
     c: false,
     json: false,
     sym: false,
+    O0: false,
+    O1: false,
+    O2: false,
   };
 
   describe("compile:without-libraries", () => {
@@ -25,8 +28,16 @@ describe("WASMCircomCompiler", () => {
     useEnvironment("with-circuits");
 
     beforeEach("setup", async function () {
+      const compilersDir = getNormalizedFullPath(this.hre.config.paths.root, "compilers");
+      await fsExtra.ensureDir(compilersDir);
+
+      const platform = CompilerPlatformBinary.WASM;
+      const circomCompilerDownloader = CircomCompilerDownloader.getCircomCompilerDownloader(platform, compilersDir);
+
+      await circomCompilerDownloader.downloadCompiler(LATEST_SUPPORTED_CIRCOM_VERSION, false, true);
+
       circomCompiler = new WASMCircomCompiler(
-        fsExtra.readFileSync(require.resolve("@distributedlab/circom2/circom.wasm")),
+        fsExtra.readFileSync(getNormalizedFullPath(compilersDir, `${LATEST_SUPPORTED_CIRCOM_VERSION}/circom.wasm`)),
       );
     });
 
@@ -134,21 +145,28 @@ describe("WASMCircomCompiler", () => {
     useEnvironment("circuits-with-libraries");
 
     beforeEach("setup", async function () {
+      const compilersDir = getNormalizedFullPath(this.hre.config.paths.root, "compilers");
+      await fsExtra.ensureDir(compilersDir);
+
+      const platform = CompilerPlatformBinary.WASM;
+      const circomCompilerDownloader = CircomCompilerDownloader.getCircomCompilerDownloader(platform, compilersDir);
+
+      await circomCompilerDownloader.downloadCompiler(LATEST_SUPPORTED_CIRCOM_VERSION, false, true);
+
       circomCompiler = new WASMCircomCompiler(
-        fsExtra.readFileSync(require.resolve("@distributedlab/circom2/circom.wasm")),
+        fsExtra.readFileSync(getNormalizedFullPath(compilersDir, `${LATEST_SUPPORTED_CIRCOM_VERSION}/circom.wasm`)),
       );
     });
 
     it("should correctly compile circuit with library include", async function () {
-      const root = this.hre.config.paths.root;
-
-      execSync("npm install --no-workspaces", { cwd: root });
-
-      const circuitFullPath: string = getNormalizedFullPath(root, "circuits/hash2.circom");
-      const artifactsFullPath: string = getNormalizedFullPath(root, "zkit/artifacts/test/hash2.circom");
+      const circuitFullPath: string = getNormalizedFullPath(this.hre.config.paths.root, "circuits/hash2.circom");
+      const artifactsFullPath: string = getNormalizedFullPath(
+        this.hre.config.paths.root,
+        "zkit/artifacts/test/hash2.circom",
+      );
       const errorFileFullPath: string = getNormalizedFullPath(artifactsFullPath, "errors.log");
-      const typesDir: string = getNormalizedFullPath(root, "generated-types/zkit");
-      const nodeModulesPath: string = getNormalizedFullPath(root, NODE_MODULES);
+      const typesDir: string = getNormalizedFullPath(this.hre.config.paths.root, "generated-types/zkit");
+      const nodeModulesPath: string = getNormalizedFullPath(getProjectRootPath(), NODE_MODULES);
 
       fsExtra.rmSync(artifactsFullPath, { recursive: true, force: true });
       fsExtra.mkdirSync(artifactsFullPath, { recursive: true });
@@ -159,7 +177,7 @@ describe("WASMCircomCompiler", () => {
         errorFileFullPath,
         linkLibraries: [nodeModulesPath],
         compileFlags: { ...defaultCompileFlags, sym: true },
-        quiet: false,
+        quiet: true,
       });
 
       fsExtra.rmSync(errorFileFullPath, { force: true });
@@ -167,18 +185,25 @@ describe("WASMCircomCompiler", () => {
       expect(fsExtra.readdirSync(artifactsFullPath)).to.be.deep.eq(["hash2.r1cs", "hash2.sym", "hash2_js"]);
 
       fsExtra.rmSync(typesDir, { recursive: true, force: true });
-
-      fsExtra.rmSync(`${root}/node_modules`, { recursive: true, force: true });
-      fsExtra.rmSync(`${root}/package-lock.json`, { recursive: true, force: true });
     });
   });
 
   describe("getCompilationArgs", () => {
     let circomCompiler: WASMCircomCompiler;
 
+    useEnvironment("with-circuits");
+
     beforeEach("setup", async function () {
+      const compilersDir = getNormalizedFullPath(this.hre.config.paths.root, "compilers");
+      await fsExtra.ensureDir(compilersDir);
+
+      const platform = CompilerPlatformBinary.WASM;
+      const circomCompilerDownloader = CircomCompilerDownloader.getCircomCompilerDownloader(platform, compilersDir);
+
+      await circomCompilerDownloader.downloadCompiler(LATEST_SUPPORTED_CIRCOM_VERSION, false, true);
+
       circomCompiler = new WASMCircomCompiler(
-        fsExtra.readFileSync(require.resolve("@distributedlab/circom2/circom.wasm")),
+        fsExtra.readFileSync(getNormalizedFullPath(compilersDir, `${LATEST_SUPPORTED_CIRCOM_VERSION}/circom.wasm`)),
       );
     });
 
