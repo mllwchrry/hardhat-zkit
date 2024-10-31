@@ -315,6 +315,8 @@ export class CircomCompilerDownloader {
       await execFileP(compilerBinary, ["--version"]);
       return true;
     } catch {
+      console.log("os arch", os.arch());
+      console.log("os platform", os.platform());
       console.log("compiler is not working", compilerBinary);
       return false;
     }
