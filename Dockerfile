@@ -1,6 +1,6 @@
 ARG NODE_VERSION=20.0.0
 
-FROM node:${NODE_VERSION}
+FROM node:lts
 
 WORKDIR /hardhat-zkit
 
