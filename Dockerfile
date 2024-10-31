@@ -1,11 +1,11 @@
-FROM node:lts
+ARG NODE_VERSION=20.0.0
+
+FROM node:${NODE_VERSION}-alpine
 
 WORKDIR /hardhat-zkit
 
-COPY package*.json ./
+COPY . .
 
 RUN npm install
 
-COPY . .
-
-CMD ["npm", "run", "test:local"]
+RUN npm run test-local
