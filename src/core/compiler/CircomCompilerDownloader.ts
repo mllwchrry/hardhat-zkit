@@ -310,6 +310,7 @@ export class CircomCompilerDownloader {
 
   private async _checkCompilerWork(compilerBinary: string): Promise<boolean> {
     console.log("in _checkCompilerWork");
+    console.log("file exists", fsExtra.existsSync(compilerBinary));
     const execFileP = promisify(execFile);
 
     try {
