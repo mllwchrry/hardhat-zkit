@@ -256,6 +256,7 @@ export class CircomCompilerDownloader {
       default:
         url = this._getWasmDownloadURL(version);
     }
+    console.log("downloading at this url", url);
 
     if (
       !(await downloadFile(
@@ -314,7 +315,8 @@ export class CircomCompilerDownloader {
     try {
       await execFileP(compilerBinary, ["--version"]);
       return true;
-    } catch {
+    } catch (error: any) {
+      console.log("ERRROR", error);
       console.log("os arch", os.arch());
       console.log("os platform", os.platform());
       console.log(fsExtra.readFileSync(compilerBinary).length);
