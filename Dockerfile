@@ -1,6 +1,6 @@
-ARG NODE_VERSION=20.0.0
+ARG NODE_VERSION=20
 
-FROM node:${NODE_VERSION}-alpine
+FROM node:${NODE_VERSION}
 
 WORKDIR /hardhat-zkit
 
