@@ -291,6 +291,7 @@ export class CircomCompilerDownloader {
   }
 
   private async _postProcessCompilerDownload(downloadPath: string): Promise<void> {
+    console.log("in _postProcessCompilerDownload", downloadPath);
     if (
       this._platform !== CompilerPlatformBinary.WINDOWS_AMD &&
       this._platform !== CompilerPlatformBinary.WINDOWS_ARM &&
@@ -307,12 +308,14 @@ export class CircomCompilerDownloader {
   }
 
   private async _checkCompilerWork(compilerBinary: string): Promise<boolean> {
+    console.log("in _checkCompilerWork");
     const execFileP = promisify(execFile);
 
     try {
       await execFileP(compilerBinary, ["--version"]);
       return true;
     } catch {
+      console.log("compiler is not working", compilerBinary);
       return false;
     }
   }
