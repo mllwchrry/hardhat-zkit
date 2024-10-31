@@ -1,6 +1,6 @@
 ARG NODE_VERSION=20.0.0
 
-FROM node:20-alpine
+FROM node:20
 
 RUN apk add --no-cache gcompat libstdc++
 

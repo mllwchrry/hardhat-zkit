@@ -152,7 +152,7 @@ describe("ZKit tasks", async function () {
     describe("config compiler version", async function () {
       useEnvironment("compiler-config", true);
 
-      it.only("should correctly compile circuits with the specified version of the compiler", async function () {
+      it("should correctly compile circuits with the specified version of the compiler", async function () {
         await this.hre.run({ scope: ZKIT_SCOPE_NAME, task: TASK_CIRCUITS_COMPILE });
 
         const artifactsPath = getNormalizedFullPath(
