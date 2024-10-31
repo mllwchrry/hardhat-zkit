@@ -237,7 +237,8 @@ class ReporterFacade {
 
 export let Reporter: ReporterFacade | null = null;
 
-export function createReporter() {
+export function createReporter(quiet: boolean) {
+  console.log("quite", quiet);
   if (Reporter) {
     return;
   }
