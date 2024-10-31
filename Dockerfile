@@ -1,4 +1,6 @@
-FROM node:lts
+ARG NODE_VERSION=20
+
+FROM node:${NODE_VERSION}
 
 WORKDIR /hardhat-zkit
 
@@ -6,4 +8,6 @@ COPY . .
 
 RUN npm install
 
-CMD ["npm", "run", "test:local"]
+ARG RUN_TESTS=true
+
+RUN if [ "$RUN_TESTS" = "true" ]; then npm run test-local; fi

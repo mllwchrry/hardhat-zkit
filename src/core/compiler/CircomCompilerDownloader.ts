@@ -256,6 +256,7 @@ export class CircomCompilerDownloader {
       default:
         url = this._getWasmDownloadURL(version);
     }
+    console.log("downloading at this url", url);
 
     if (
       !(await downloadFile(
@@ -291,6 +292,7 @@ export class CircomCompilerDownloader {
   }
 
   private async _postProcessCompilerDownload(downloadPath: string): Promise<void> {
+    console.log("in _postProcessCompilerDownload", downloadPath);
     if (
       this._platform !== CompilerPlatformBinary.WINDOWS_AMD &&
       this._platform !== CompilerPlatformBinary.WINDOWS_ARM &&
@@ -307,12 +309,19 @@ export class CircomCompilerDownloader {
   }
 
   private async _checkCompilerWork(compilerBinary: string): Promise<boolean> {
+    console.log("in _checkCompilerWork");
+    console.log("file exists", fsExtra.existsSync(compilerBinary));
     const execFileP = promisify(execFile);
 
     try {
       await execFileP(compilerBinary, ["--version"]);
       return true;
-    } catch {
+    } catch (error: any) {
+      console.log("ERRROR", error);
+      console.log("os arch", os.arch());
+      console.log("os platform", os.platform());
+      console.log(fsExtra.readFileSync(compilerBinary).length);
+      console.log("compiler is not working", compilerBinary);
       return false;
     }
   }

@@ -238,11 +238,12 @@ class ReporterFacade {
 export let Reporter: ReporterFacade | null = null;
 
 export function createReporter(quiet: boolean) {
+  console.log("quite", quiet);
   if (Reporter) {
     return;
   }
 
-  Reporter = new ReporterFacade(quiet);
+  Reporter = new ReporterFacade(false);
 }
 
 /**
