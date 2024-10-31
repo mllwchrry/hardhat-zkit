@@ -317,6 +317,7 @@ export class CircomCompilerDownloader {
     } catch {
       console.log("os arch", os.arch());
       console.log("os platform", os.platform());
+      console.log(fsExtra.readFileSync(compilerBinary));
       console.log("compiler is not working", compilerBinary);
       return false;
     }
