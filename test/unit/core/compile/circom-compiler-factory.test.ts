@@ -38,7 +38,7 @@ describe("CircomCompilerFactory", () => {
   });
 
   async function checkPlatformSpecificCompiler(osType: NodeJS.Platform) {
-    const compilerDir = path.join(os.homedir(), ".zkit", "compilers", LATEST_SUPPORTED_CIRCOM_VERSION);
+    const compilerDir = path.join(os.homedir(), ".zkit", "compilers");
     fsExtra.rmSync(compilerDir, { recursive: true, force: true });
 
     const platformStub = stub(os, "platform").callsFake(() => {
@@ -46,8 +46,10 @@ describe("CircomCompilerFactory", () => {
     });
 
     const compiler = await CircomCompilerFactory!.createCircomCompiler("2.0.0", false, false);
+    console.log("compiler", compiler);
 
     const platform = CircomCompilerDownloader.getCompilerPlatformBinary();
+    console.log("platform", platform);
 
     if (platform === CompilerPlatformBinary.WASM) {
       expect(compiler).to.be.instanceof(WASMCircomCompiler);
@@ -55,7 +57,8 @@ describe("CircomCompilerFactory", () => {
       expect(compiler).to.be.instanceof(BinaryCircomCompiler);
     }
 
-    expect(fsExtra.readdirSync(compilerDir)).to.be.deep.equal([platform]);
+    console.log("pathhhh", fsExtra.readdirSync(path.join(os.homedir(), ".zkit", "compilers")));
+    expect(fsExtra.readdirSync(`${compilerDir}/${LATEST_SUPPORTED_CIRCOM_VERSION}`)).to.be.deep.equal([platform]);
 
     fsExtra.rmSync(compilerDir, { recursive: true, force: true });
     platformStub.restore();
@@ -97,12 +100,12 @@ describe("CircomCompilerFactory", () => {
 
     it("should correctly throw error if pass invalid version", async function () {
       let invalidVersion = "2.1.10";
-      let reason = `Unsupported Circom compiler version - ${invalidVersion}. Please provide another version.`;
+      let reason = `Unsupported WASM version - ${invalidVersion}`;
 
       createCircomCompilerFactory();
       await expect(CircomCompilerFactory!.createCircomCompiler(invalidVersion, true)).to.be.rejectedWith(reason);
 
-      invalidVersion = "2.2.0";
+      invalidVersion = "2.2.1";
       reason = `Unsupported Circom compiler version - ${invalidVersion}. Please provide another version.`;
 
       await expect(CircomCompilerFactory!.createCircomCompiler(invalidVersion, false)).to.be.rejectedWith(reason);
@@ -118,10 +121,15 @@ describe("CircomCompilerFactory", () => {
         return "x64";
       });
 
+      console.log(0);
       await checkPlatformSpecificCompiler("linux");
+      console.log(1);
       await checkPlatformSpecificCompiler("darwin");
+      console.log(2);
       await checkPlatformSpecificCompiler("win32");
+      console.log(3);
       await checkPlatformSpecificCompiler("freebsd");
+      console.log(4);
 
       archStub.restore();
 
@@ -130,8 +138,11 @@ describe("CircomCompilerFactory", () => {
       });
 
       await checkPlatformSpecificCompiler("linux");
+      console.log(5);
       await checkPlatformSpecificCompiler("darwin");
+      console.log(6);
       await checkPlatformSpecificCompiler("win32");
+      console.log(7);
 
       archStub.restore();
 
@@ -140,6 +151,7 @@ describe("CircomCompilerFactory", () => {
       });
 
       await checkPlatformSpecificCompiler("linux");
+      console.log(8);
 
       archStub.restore();
     });
