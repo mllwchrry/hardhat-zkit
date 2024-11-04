@@ -46,8 +46,10 @@ describe("CircomCompilerFactory", () => {
     });
 
     const compiler = await CircomCompilerFactory!.createCircomCompiler("2.0.0", false, false);
+    console.log("compiler", compiler);
 
     const platform = CircomCompilerDownloader.getCompilerPlatformBinary();
+    console.log("platform", platform);
 
     if (platform === CompilerPlatformBinary.WASM) {
       expect(compiler).to.be.instanceof(WASMCircomCompiler);
