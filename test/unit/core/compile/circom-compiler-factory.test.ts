@@ -38,7 +38,7 @@ describe("CircomCompilerFactory", () => {
   });
 
   async function checkPlatformSpecificCompiler(osType: NodeJS.Platform) {
-    const compilerDir = path.join(os.homedir(), ".zkit", "compilers", LATEST_SUPPORTED_CIRCOM_VERSION);
+    const compilerDir = path.join(os.homedir(), ".zkit", "compilers");
     fsExtra.rmSync(compilerDir, { recursive: true, force: true });
 
     const platformStub = stub(os, "platform").callsFake(() => {
@@ -58,7 +58,7 @@ describe("CircomCompilerFactory", () => {
     }
 
     console.log("pathhhh", fsExtra.readdirSync(path.join(os.homedir(), ".zkit", "compilers")));
-    expect(fsExtra.readdirSync(compilerDir)).to.be.deep.equal([platform]);
+    expect(fsExtra.readdirSync(`${compilerDir}/${LATEST_SUPPORTED_CIRCOM_VERSION}`)).to.be.deep.equal([platform]);
 
     fsExtra.rmSync(compilerDir, { recursive: true, force: true });
     platformStub.restore();
