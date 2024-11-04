@@ -55,6 +55,7 @@ describe("CircomCompilerFactory", () => {
       expect(compiler).to.be.instanceof(BinaryCircomCompiler);
     }
 
+    console.log("pathhhh", fsExtra.readdirSync(path.join(os.homedir(), ".zkit", "compilers")));
     expect(fsExtra.readdirSync(compilerDir)).to.be.deep.equal([platform]);
 
     fsExtra.rmSync(compilerDir, { recursive: true, force: true });
@@ -118,10 +119,15 @@ describe("CircomCompilerFactory", () => {
         return "x64";
       });
 
+      console.log(0);
       await checkPlatformSpecificCompiler("linux");
+      console.log(1);
       await checkPlatformSpecificCompiler("darwin");
+      console.log(2);
       await checkPlatformSpecificCompiler("win32");
+      console.log(3);
       await checkPlatformSpecificCompiler("freebsd");
+      console.log(4);
 
       archStub.restore();
 
@@ -130,8 +136,11 @@ describe("CircomCompilerFactory", () => {
       });
 
       await checkPlatformSpecificCompiler("linux");
+      console.log(5);
       await checkPlatformSpecificCompiler("darwin");
+      console.log(6);
       await checkPlatformSpecificCompiler("win32");
+      console.log(7);
 
       archStub.restore();
 
@@ -140,6 +149,7 @@ describe("CircomCompilerFactory", () => {
       });
 
       await checkPlatformSpecificCompiler("linux");
+      console.log(8);
 
       archStub.restore();
     });
