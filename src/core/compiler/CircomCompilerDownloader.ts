@@ -148,6 +148,8 @@ export class CircomCompilerDownloader {
    * @throws `HardhatZKitError` If the specified compiler version is not downloaded
    */
   public async getCompilerBinary(version: string, isVersionStrict: boolean): Promise<CompilerInfo> {
+    console.log("inside getCompilerBinary", version);
+    console.log("inside getCompilerBinary isVersionStrict", isVersionStrict);
     if (!isVersionStrict) {
       version = this._getLatestDownloadedCircomVersion();
 
@@ -155,6 +157,8 @@ export class CircomCompilerDownloader {
         throw new HardhatZKitError("No latest compiler found");
       }
     }
+
+    console.log("version", version);
 
     const compilerBinaryPath = this._getCompilerDownloadPath(version);
     const wasmCompilerBinaryPath = this._getWasmCompilerDownloadPath(version);

@@ -105,6 +105,8 @@ export class BaseCircomCompilerFactory {
     isVersionStrict: boolean,
     verifyCompiler: boolean,
   ): Promise<ICircomCompiler | undefined> {
+    console.log("inside _tryCreateBinaryCompiler", isVersionStrict);
+    console.log("inside _tryCreateBinaryCompiler version", version);
     try {
       const compilerInfo = await this._getBinaryCompiler(platform, version, isVersionStrict, verifyCompiler);
 
@@ -168,6 +170,7 @@ export class BaseCircomCompilerFactory {
     isVersionStrict: boolean,
     verifyCompiler: boolean,
   ): Promise<CompilerInfo> {
+    console.log("inside _getBinaryCompiler version", version);
     const compilersDir = await this._getCompilersDir();
     const downloader = CircomCompilerDownloader.getCircomCompilerDownloader(platform, compilersDir);
 
